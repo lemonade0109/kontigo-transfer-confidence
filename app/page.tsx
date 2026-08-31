@@ -130,7 +130,7 @@ export default function Home() {
             <aside className="confidence-side">
               <div className="check-card"><p className="eyebrow">Transfer checks</p><div className="check-list"><div><span className="check-dot"><Check size={14}/></span><p><strong>Recipient details present</strong><small>{recipient} · {country}</small></p></div><div><span className="check-dot"><Check size={14}/></span><p><strong>Fee visible</strong><small>{fee.toFixed(2)} USDC before confirmation</small></p></div><div><span className="check-dot"><Check size={14}/></span><p><strong>Delivery route explained</strong><small>No hidden step in this demo flow</small></p></div><div><span className="check-dot"><Check size={14}/></span><p><strong>Recipient outcome shown</strong><small>Expected payout displayed up front</small></p></div></div></div>
               <div className="ai-card"><div className="ai-icon"><Sparkles size={18}/></div><p className="eyebrow">Something unclear?</p><h3>Ask about this transfer.</h3><p>The assistant explains fees, route, timing and failure states using only this transfer’s structured data.</p><button className="secondary-button" onClick={()=>setAiOpen(true)}>Ask AI <Sparkles size={16}/></button></div>
-              <button className="primary-button" onClick={()=>alert("Phase 2 complete. Next: AI explanation + final review.")}>Review transfer <ArrowRight size={18}/></button>
+              <button className="primary-button" onClick={()=>setStep(4)}>Review transfer <ArrowRight size={18}/></button>
               <p className="prototype-note">Illustrative values only. No real transfer is executed.</p>
             </aside>
           </div>
