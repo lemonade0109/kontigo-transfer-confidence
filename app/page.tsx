@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, ChevronDown, Clock3, Landmark, Route, ShieldCheck, Sparkles, WalletCards } from "lucide-react";
 
-type Step = 1 | 2 | 3;
+type Step = 1 | 2 | 3 | 4 | 5;
 const countries = ["Colombia", "Mexico", "Argentina", "Peru", "Brazil", "Venezuela"];
 const deliveryMethods = ["Bank account", "Kontigo wallet", "Local payout"];
 
@@ -69,7 +69,15 @@ export default function Home() {
         </header>
 
         <div className="step-row">
-          <div className="step-copy"><span>Step {step} of 5</span><strong>{step === 1 ? "Start transfer" : step === 2 ? "Recipient" : "Transfer confidence"}</strong></div>
+          <div className="step-copy"><span>Step {step} of 5</span><strong>{step === 1
+                ? "Start transfer"
+                : step === 2
+                  ? "Recipient"
+                  : step === 3
+                    ? "Transfer confidence"
+                    : step === 4
+                      ? "Review & confirm"
+                      : "Complete"}</strong></div>
           <div className="progress-track"><div className="progress-fill" style={{width:`${step*20}%`}}/></div>
         </div>
 
@@ -127,6 +135,136 @@ export default function Home() {
             </aside>
           </div>
         )}
+
+        {step === 4 && (
+          <div className="review-layout">
+            <section className="review-main">
+              <button className="ghost-back" onClick={goBack}>
+                <ArrowLeft size={18} />
+                Back
+              </button>
+
+              <p className="eyebrow">Final review</p>
+              <h1>Review before you confirm.</h1>
+              <p className="lede">
+                One last look at the transfer details and the checks that made this transfer understandable.
+              </p>
+
+              <div className="review-amount-card">
+                <div>
+                  <span>You send</span>
+                  <strong>{numericAmount.toFixed(2)} {currency}</strong>
+                </div>
+                <ArrowRight size={21} />
+                <div className="align-right">
+                  <span>{recipient} receives</span>
+                  <strong>
+                    {country === "Colombia"
+                      ? `COP ${recipientLocal.toLocaleString("en-US", { maximumFractionDigits: 0 })}`
+                      : `${recipientUsd.toFixed(2)} USD equiv.`}
+                  </strong>
+                </div>
+              </div>
+
+              <div className="review-details">
+                <div><span>Recipient</span><strong>{recipient}</strong></div>
+                <div><span>Destination</span><strong>{country}</strong></div>
+                <div><span>Delivery method</span><strong>{deliveryMethod}</strong></div>
+                <div><span>Illustrative fee</span><strong>{fee.toFixed(2)} USDC</strong></div>
+                <div><span>Estimated arrival</span><strong>Within minutes</strong></div>
+              </div>
+
+              <div className="review-confidence">
+                <div className="review-confidence-top">
+                  <div>
+                    <p className="eyebrow">Confidence summary</p>
+                    <h3>You know what happens next.</h3>
+                  </div>
+                  <strong className="review-score">92%</strong>
+                </div>
+
+                <div className="review-check-grid">
+                  <div><Check size={15} /> Recipient reviewed</div>
+                  <div><Check size={15} /> Fee visible</div>
+                  <div><Check size={15} /> Route explained</div>
+                  <div><Check size={15} /> Recipient outcome shown</div>
+                </div>
+              </div>
+            </section>
+
+            <aside className="confirm-panel">
+              <div className="confirm-icon">
+                <ShieldCheck size={25} />
+              </div>
+              <p className="eyebrow">Ready to confirm</p>
+              <h2>{numericAmount.toFixed(2)} {currency}</h2>
+              <p className="confirm-copy">
+                You’ve reviewed the recipient, illustrative fee, expected payout, delivery route and timing.
+              </p>
+
+              <div className="confirm-recipient">
+                <span>Sending to</span>
+                <strong>{recipient}</strong>
+                <small>{country} · {deliveryMethod}</small>
+              </div>
+
+              <button className="primary-button" onClick={() => setStep(5)}>
+                Confirm prototype transfer
+                <Check size={18} />
+              </button>
+              <p className="prototype-note">
+                Demo only. Clicking confirm will not move real funds.
+              </p>
+            </aside>
+          </div>
+        )}
+
+        {step === 5 && (
+          <div className="success-layout">
+            <div className="success-check">
+              <Check size={34} />
+            </div>
+            <p className="eyebrow">Prototype transfer confirmed</p>
+            <h1>Clear before confirmed.</h1>
+            <p className="success-lede">
+              The demo journey is complete. No real funds were moved.
+            </p>
+
+            <div className="success-card">
+              <div className="success-amount">
+                <span>{numericAmount.toFixed(2)} {currency}</span>
+                <small>to {recipient}</small>
+              </div>
+              <div className="success-divider" />
+              <div className="success-row"><span>Status</span><strong>Prototype confirmed</strong></div>
+              <div className="success-row"><span>Destination</span><strong>{country}</strong></div>
+              <div className="success-row"><span>Delivery</span><strong>{deliveryMethod}</strong></div>
+              <div className="success-row"><span>Confidence reviewed</span><strong>92%</strong></div>
+            </div>
+
+            <div className="success-message">
+              <ShieldCheck size={19} />
+              <p>
+                This concept explores how a transfer experience can make fees, routes,
+                recipient outcomes and uncertainty understandable before approval.
+              </p>
+            </div>
+
+            <button
+              className="secondary-button success-reset"
+              onClick={() => {
+                setStep(1);
+                setAiOpen(false);
+                setAiQuestion("");
+                setAiAnswer("");
+              }}
+            >
+              Start another demo
+              <ArrowRight size={16} />
+            </button>
+          </div>
+        )}
+
         {aiOpen && (
           <div className="ai-overlay" onClick={() => setAiOpen(false)}>
             <aside className="ai-drawer" onClick={(event) => event.stopPropagation()}>
