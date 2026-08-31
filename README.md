@@ -17,6 +17,38 @@ This prototype explores a **Transfer Confidence Layer** that brings those answer
 5. **Review & Confirm** — see the important information together before making a decision.
 6. **Success** — complete the prototype journey with a clear demo-only confirmation.
 
+## Screenshots
+
+### 1. Start a transfer
+
+![Start transfer screen showing an amount and destination selector](public/Screenshot%202026-08-31%20225931.png)
+
+The first screen captures the amount and recipient country while setting the expectation that fees, delivery route, and recipient outcome will be shown before confirmation.
+
+### 2. Add recipient details
+
+![Recipient screen showing Sofia Martinez and the Kontigo wallet delivery method](public/Screenshot%202026-08-31%20225951.png)
+
+The recipient step records who will receive the transfer and how it will be delivered, then previews the transfer details that will be checked next.
+
+### 3. Review transfer confidence
+
+![Transfer confidence screen showing recipient payout, fee, estimated arrival, route, and confidence checks](public/Screenshot%202026-08-31%20230021.png)
+
+The confidence view makes the expected payout, illustrative fee, timing, local-payout route, and readiness checks visible in one place. It also offers the constrained AI explainer for questions about these displayed facts.
+
+### 4. Review before confirming
+
+![Final review screen showing the recipient, destination, delivery method, illustrative fee, and estimated arrival](public/Screenshot%202026-08-31%20230045.png)
+
+The final review consolidates the transfer details and confidence summary before the user confirms the demo transfer.
+
+### 5. Complete the demo
+
+![Completion screen confirming a 200 USDC prototype transfer to Sofia Martinez in Colombia](public/Screenshot%202026-08-31%20230104.png)
+
+The completion screen closes the prototype journey, clearly stating that the transfer is simulated and no real funds have moved.
+
 ## Why the AI is constrained
 
 For a financial product, an AI assistant should not invent exchange rates, fees, settlement times or guarantees.
