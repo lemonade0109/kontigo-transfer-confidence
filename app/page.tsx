@@ -14,6 +14,10 @@ export default function Home() {
   const [country, setCountry] = useState("Colombia");
   const [recipient, setRecipient] = useState("Sofia Martinez");
   const [deliveryMethod, setDeliveryMethod] = useState("Bank account");
+  const [aiOpen, setAiOpen] = useState(false);
+  const [aiQuestion, setAiQuestion] = useState("");
+  const [aiAnswer, setAiAnswer] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
 
   const numericAmount = Number(amount) || 0;
   const fee = numericAmount > 0 ? Math.max(1.25, numericAmount * 0.008) : 0;
@@ -21,6 +25,33 @@ export default function Home() {
   const copRate = 3980; // illustrative demo rate only
   const recipientLocal = recipientUsd * copRate;
   const canContinue = useMemo(() => Number.isFinite(numericAmount) && numericAmount > 0 && country.length > 0, [numericAmount, country]);
+
+  const askTransferAI = async (question: string) => {
+    const clean = question.trim();
+    if (!clean) return;
+
+    setAiLoading(true);
+    setAiAnswer("");
+    await new Promise((resolve) => setTimeout(resolve, 550));
+
+    const q = clean.toLowerCase();
+    let answer = "";
+    if (q.includes("fee")) {
+      answer = `This demo shows a ${fee.toFixed(2)} USDC fee before confirmation. The purpose is to make the cost visible up front rather than letting the user discover it after sending.`;
+    } else if (q.includes("fail") || q.includes("wrong")) {
+      answer = "In this prototype, a failed transfer would not be marked as delivered. A production version should clearly show whether funds are pending, returned, or need support review. This demo does not execute a real transfer.";
+    } else if (q.includes("route")) {
+      answer = `The prototype explains the path as: your ${currency} → conversion route → local payout → ${recipient}. The route is illustrative, but the product idea is to expose the path clearly enough that the user understands it before approval.`;
+    } else if (q.includes("receive") || q.includes("amount")) {
+      answer = "The recipient amount is calculated from the demo transfer amount minus the illustrative fee, then converted using a static demo rate. It is not a live Kontigo quote.";
+    } else if (q.includes("time") || q.includes("arrival") || q.includes("long")) {
+      answer = "The displayed arrival time is an illustrative estimate. In a real product, this should come from the actual transfer rail and transaction status rather than from the AI itself.";
+    } else {
+      answer = `For this transfer, the structured data says you are sending ${numericAmount.toFixed(2)} ${currency} to ${recipient} in ${country} via ${deliveryMethod}. The assistant only explains known details and does not invent live rates, fees, or settlement guarantees.`;
+    }
+    setAiAnswer(answer);
+    setAiLoading(false);
+  };
 
   const goBack = () => {
     if (step === 3) setStep(2);
@@ -90,9 +121,44 @@ export default function Home() {
             </section>
             <aside className="confidence-side">
               <div className="check-card"><p className="eyebrow">Transfer checks</p><div className="check-list"><div><span className="check-dot"><Check size={14}/></span><p><strong>Recipient details present</strong><small>{recipient} · {country}</small></p></div><div><span className="check-dot"><Check size={14}/></span><p><strong>Fee visible</strong><small>{fee.toFixed(2)} USDC before confirmation</small></p></div><div><span className="check-dot"><Check size={14}/></span><p><strong>Delivery route explained</strong><small>No hidden step in this demo flow</small></p></div><div><span className="check-dot"><Check size={14}/></span><p><strong>Recipient outcome shown</strong><small>Expected payout displayed up front</small></p></div></div></div>
-              <div className="ai-card"><div className="ai-icon"><Sparkles size={18}/></div><p className="eyebrow">Something unclear?</p><h3>Ask about this transfer.</h3><p>In Phase 3, the assistant will explain fees, route, timing and failure states using only this transfer’s structured data.</p><button className="secondary-button" onClick={()=>alert("AI explanation panel arrives in Phase 3.")}>Ask AI <Sparkles size={16}/></button></div>
+              <div className="ai-card"><div className="ai-icon"><Sparkles size={18}/></div><p className="eyebrow">Something unclear?</p><h3>Ask about this transfer.</h3><p>The assistant explains fees, route, timing and failure states using only this transfer’s structured data.</p><button className="secondary-button" onClick={()=>alert("AI explanation panel arrives in Phase 3.")}>Ask AI <Sparkles size={16}/></button></div>
               <button className="primary-button" onClick={()=>alert("Phase 2 complete. Next: AI explanation + final review.")}>Review transfer <ArrowRight size={18}/></button>
               <p className="prototype-note">Illustrative values only. No real transfer is executed.</p>
+            </aside>
+          </div>
+        )}
+        {aiOpen && (
+          <div className="ai-overlay" onClick={() => setAiOpen(false)}>
+            <aside className="ai-drawer" onClick={(event) => event.stopPropagation()}>
+              <div className="ai-drawer-header">
+                <div><p className="eyebrow">Transfer assistant</p><h2>Ask about this transfer</h2></div>
+                <button className="drawer-close" onClick={() => setAiOpen(false)} aria-label="Close">×</button>
+              </div>
+              <div className="ai-context-strip">
+                <ShieldCheck size={18} />
+                <div><strong>{numericAmount.toFixed(2)} {currency} → {recipient}</strong><span>{country} · {deliveryMethod}</span></div>
+              </div>
+              <p className="drawer-intro">The assistant only explains the structured transfer information already shown in this prototype.</p>
+              <div className="suggestion-list">
+                {["Why is there a fee?","What happens if the transfer fails?","Why is this route being used?","Why does the recipient receive this amount?"].map((question) => (
+                  <button key={question} onClick={() => { setAiQuestion(question); askTransferAI(question); }}>
+                    {question}<ArrowRight size={15} />
+                  </button>
+                ))}
+              </div>
+              <div className="ask-box">
+                <textarea value={aiQuestion} onChange={(event) => setAiQuestion(event.target.value)} placeholder="Ask something about this transfer..." rows={3} />
+                <button className="primary-button" disabled={!aiQuestion.trim() || aiLoading} onClick={() => askTransferAI(aiQuestion)}>
+                  {aiLoading ? "Explaining..." : "Ask"}{!aiLoading && <Sparkles size={16} />}
+                </button>
+              </div>
+              {(aiLoading || aiAnswer) && (
+                <div className="ai-response">
+                  <div className="ai-response-title"><Sparkles size={16} /><strong>Kontigo Assistant</strong></div>
+                  {aiLoading ? <div className="typing-row"><span/><span/><span/></div> : <p>{aiAnswer}</p>}
+                </div>
+              )}
+              <div className="ai-safety-note"><ShieldCheck size={16} /><p>Demo behavior only. The assistant does not calculate or promise live exchange rates, fees, settlement times, or financial outcomes.</p></div>
             </aside>
           </div>
         )}
