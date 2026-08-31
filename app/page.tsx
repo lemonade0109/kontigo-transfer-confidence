@@ -54,8 +54,9 @@ export default function Home() {
   };
 
   const goBack = () => {
-    if (step === 3) setStep(2);
-    if (step === 2) setStep(1);
+    if (step === 4) setStep(3);
+    else if (step === 3) setStep(2);
+    else if (step === 2) setStep(1);
   };
 
   return (
@@ -64,8 +65,8 @@ export default function Home() {
       <div className="ambient ambient-two" />
       <section className="prototype-card">
         <header className="topbar">
-          <div className="brand-wrap"><div className="brand-mark">K</div><div><p className="brand-name">Kontigo</p><p className="brand-subtitle">Transfer confidence prototype</p></div></div>
-          <div className="exploration-badge"><Sparkles size={14}/> Product exploration</div>
+          <div className="brand-wrap"><div className="brand-mark">K</div><div><p className="brand-name">Kontigo</p><p className="brand-subtitle">Independent transfer confidence concept</p></div></div>
+          <div className="exploration-badge"><Sparkles size={14}/> Independent product exploration</div>
         </header>
 
         <div className="step-row">
@@ -118,17 +119,17 @@ export default function Home() {
           <div className="confidence-layout">
             <section className="confidence-main">
               <button className="ghost-back" onClick={goBack}><ArrowLeft size={18}/> Back</button>
-              <div className="confidence-heading"><div><p className="eyebrow">Before you send</p><h1>Transfer Confidence</h1><p className="lede">A clear preview of what is expected to happen before you approve this transfer.</p></div><div className="score-ring"><strong>92</strong><span>Confidence</span></div></div>
+              <div className="confidence-heading"><div><p className="eyebrow">Before you send</p><h1>Transfer Confidence</h1><p className="lede">See the cost, route, timing and recipient outcome before you decide to confirm.</p></div><div className="score-ring"><strong>92</strong><span>Demo confidence</span></div></div>
               <div className="transfer-hero"><div><span>You send</span><strong>{numericAmount.toFixed(2)} {currency}</strong></div><ArrowRight size={22}/><div className="align-right"><span>{recipient} receives</span><strong>{country === "Colombia" ? `COP ${recipientLocal.toLocaleString("en-US", {maximumFractionDigits:0})}` : `${recipientUsd.toFixed(2)} USD equiv.`}</strong></div></div>
               <div className="fact-grid">
                 <div className="fact-card"><WalletCards size={19}/><span>Transfer fee</span><strong>{fee.toFixed(2)} USDC</strong><small>Shown before approval</small></div>
                 <div className="fact-card"><Clock3 size={19}/><span>Estimated arrival</span><strong>Within minutes</strong><small>Demo estimate</small></div>
                 <div className="fact-card"><Landmark size={19}/><span>Delivery</span><strong>{deliveryMethod}</strong><small>{country}</small></div>
               </div>
-              <div className="route-card"><div className="section-title-row"><div><p className="eyebrow">How your money gets there</p><h3>One route, explained plainly.</h3></div><Route size={22}/></div><div className="route-line"><div className="route-node active"><span>1</span><strong>Your USDC</strong><small>{numericAmount.toFixed(2)} USDC</small></div><div className="route-connector"/><div className="route-node"><span>2</span><strong>Conversion route</strong><small>Demo settlement path</small></div><div className="route-connector"/><div className="route-node"><span>3</span><strong>Local payout</strong><small>{deliveryMethod}</small></div><div className="route-connector"/><div className="route-node"><span>4</span><strong>{recipient}</strong><small>{country}</small></div></div></div>
+              <div className="route-card"><div className="section-title-row"><div><p className="eyebrow">How your money gets there</p><h3>See how the transfer is expected to move.</h3></div><Route size={22}/></div><div className="route-line"><div className="route-node active"><span>1</span><strong>Your USDC</strong><small>{numericAmount.toFixed(2)} USDC</small></div><div className="route-connector"/><div className="route-node"><span>2</span><strong>Conversion route</strong><small>Demo settlement path</small></div><div className="route-connector"/><div className="route-node"><span>3</span><strong>Local payout</strong><small>{deliveryMethod}</small></div><div className="route-connector"/><div className="route-node"><span>4</span><strong>{recipient}</strong><small>{country}</small></div></div></div>
             </section>
             <aside className="confidence-side">
-              <div className="check-card"><p className="eyebrow">Transfer checks</p><div className="check-list"><div><span className="check-dot"><Check size={14}/></span><p><strong>Recipient details present</strong><small>{recipient} · {country}</small></p></div><div><span className="check-dot"><Check size={14}/></span><p><strong>Fee visible</strong><small>{fee.toFixed(2)} USDC before confirmation</small></p></div><div><span className="check-dot"><Check size={14}/></span><p><strong>Delivery route explained</strong><small>No hidden step in this demo flow</small></p></div><div><span className="check-dot"><Check size={14}/></span><p><strong>Recipient outcome shown</strong><small>Expected payout displayed up front</small></p></div></div></div>
+              <div className="check-card"><p className="eyebrow">Transfer checks</p><div className="check-list"><div><span className="check-dot"><Check size={14}/></span><p><strong>Recipient details present</strong><small>{recipient} · {country}</small></p></div><div><span className="check-dot"><Check size={14}/></span><p><strong>Fee visible</strong><small>{fee.toFixed(2)} USDC before confirmation</small></p></div><div><span className="check-dot"><Check size={14}/></span><p><strong>Delivery route explained</strong><small>Route is visible before confirmation</small></p></div><div><span className="check-dot"><Check size={14}/></span><p><strong>Recipient outcome shown</strong><small>Expected payout displayed up front</small></p></div></div></div>
               <div className="ai-card"><div className="ai-icon"><Sparkles size={18}/></div><p className="eyebrow">Something unclear?</p><h3>Ask about this transfer.</h3><p>The assistant explains fees, route, timing and failure states using only this transfer’s structured data.</p><button className="secondary-button" onClick={()=>setAiOpen(true)}>Ask AI <Sparkles size={16}/></button></div>
               <button className="primary-button" onClick={()=>setStep(4)}>Review transfer <ArrowRight size={18}/></button>
               <p className="prototype-note">Illustrative values only. No real transfer is executed.</p>
@@ -178,7 +179,7 @@ export default function Home() {
                 <div className="review-confidence-top">
                   <div>
                     <p className="eyebrow">Confidence summary</p>
-                    <h3>You know what happens next.</h3>
+                    <h3>Key transfer details reviewed.</h3>
                   </div>
                   <strong className="review-score">92%</strong>
                 </div>
@@ -225,7 +226,7 @@ export default function Home() {
               <Check size={34} />
             </div>
             <p className="eyebrow">Prototype transfer confirmed</p>
-            <h1>Clear before confirmed.</h1>
+            <h1>Clarity before confirmation.</h1>
             <p className="success-lede">
               The demo journey is complete. No real funds were moved.
             </p>
